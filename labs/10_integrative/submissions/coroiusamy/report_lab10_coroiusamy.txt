@@ -1,0 +1,36 @@
+1. Introducere și Obiective
+Scopul acestui laborator a fost implementarea unui pipeline de integrare multi-omics (Genomică + Transcriptomică) pentru identificarea relațiilor funcționale dintre variantele genetice (SNPs) și nivelurile de expresie genică.
+Integrarea este esențială în medicina de precizie pentru a trece de la simple corelații la înțelegerea mecanismelor biologice de tip eQTL (expression Quantitative Trait Loci).
+
+2. Metodologie
+Pipeline-ul a constat în următoarele etape tehnice:
+
+- Armonizarea datelor: Alinierea a două matrici (SNP și Expresie) pe baza identificatorilor comuni de probe (50 probe).
+- Preprocesare: Normalizarea fiecărui strat omic folosind Z-score scaling (StandardScaler) pentru a aduce variabilele la aceeași scară (medie 0, varianta 1), evitând dominanța stratului cu valori absolute mai mari.
+- Reducerea dimensionalității: Aplicarea analizei componentelor principale (PCA) pe straturile individuale și pe matricea concatenată (Feature Fusion).
+- Analiza Cross-Omics: Calcularea coeficienților de corelație Pearson între toate perechile SNP-Gene pentru a identifica biomarkeri potențiali.
+
+3. Analiza Rezultatelor
+
+3.1. Interpretarea PCA
+Analizând figurile generate (pca_snp.png, pca_expr.png, pca_joint.png):
+
+- PCA Expression: Prima componentă (PC1) explică aproximativ 9.99% din varianta. Probele sunt distribuite uniform, fără clustere evidente, ceea ce sugerează un semnal biologic difuz în absența unor etichete de boală.
+- PCA SNP: PC1 explică 10.96% din varianta. Variabilitatea genetică este capturată similar cu cea transcriptomică.
+- PCA Joint Layer: Prin fuziunea straturilor, varianta explicată de PC1 este de 8.21%. Deși procentul explicat scade ușor din cauza creșterii complexității spațiului de trăsături, proiecția joint oferă o vedere holistică asupra probelor, integrând ambele tipuri de semnale biologice.
+
+3.2. Identificarea Markerilor Cross-Omics
+În urma rulării scriptului ex02_cross_omics.py, s-au identificat perechi cu corelații extrem de puternice ($|r| > 0.94$), depășind pragul inițial de 0.5. Cele mai relevante perechi sunt:
+
+SNP       Gene       Correlation
+rs1002    GENE_02    0.9658
+rs1004    GENE_04    0.9633
+rs1001    GENE_01    0.9608
+rs1000    GENE_00    0.9597
+rs1003    GENE_03    0.9440
+
+Aceste rezultate indică o relație liniară aproape perfectă între varianta genetică și expresia genei asociate. Din punct de vedere biologic, aceste perechi reprezintă candidați ideali pentru studii de validare a mecanismelor de reglare genică.
+
+4. Concluzii
+Integrarea multi-omics a permis identificarea unor semnale care ar fi putut fi ignorate într-o analiză single-omics. Corelațiile ridicate obținute demonstrează că pipeline-ul este capabil să detecteze influențe genetice majore asupra profilului transcriptomic.
+Aceste metode sunt fundamentale în stratificarea pacienților și în descoperirea de noi ținte terapeutice în cancer și boli rare.
