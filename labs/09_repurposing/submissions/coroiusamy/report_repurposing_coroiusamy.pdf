@@ -1,0 +1,52 @@
+Studiu de Reutilizare a Medicamentelor pentru Diabetul Zaharat de Tip 2 prin Medicina de Rețea
+
+1. Obiectivul Studiului
+Scopul acestui laborator a fost utilizarea medicinei de rețea (Network Medicine) pentru a identifica și prioritiza medicamente cu potențial de reutilizare (drug repurposing) pentru Diabetul Zaharat de Tip 2 (T2D).
+Ne-am bazat pe premisa că un medicament eficient trebuie să țintească proteine aflate în proximitatea topologică a modulului bolii în rețeaua de interacțiuni drug–gene.
+
+2. Metodologie și Date Utilizate
+
+2.1 Sursa Datelor
+Platforma: Open Targets Platform, versiunea 25.12
+Interacțiuni Drug–Gene: 7.497 de interacțiuni unice (perechi medicament–țintă)
+Modulul Bolii (T2D): Set de 8 gene „seed” validate prin studii GWAS și clinice:
+TCF7L2, KCNJ11, PPARG, SLC30A8, GCK, CAPN10, IRS1, HNF1A
+
+2.2 Modelarea Rețelei
+
+Am construit un graf bipartit 
+G=(D,G,E), unde:
+
+D reprezintă setul de medicamente (ChEMBL IDs)
+G reprezintă setul de gene (Target Names)
+E reprezintă muchiile de interacțiune directă
+
+Prioritizare:
+Am calculat scorul de proximitate (Network Proximity) ca fiind distanța medie a celui mai scurt drum de la un medicament la setul de gene țintă ale bolii:
+
+d(d,S)=1/∣S∣*​s∈S∑​min(dist(d,s))
+
+3. Rezultate și Analiză
+3.1 Validarea Modelului (Control Pozitiv)
+
+Analiza fișierului drug_priority_coroiusamy.csv confirmă validitatea metodei. Medicamentele antidiabetice consacrate au obținut cele mai mici scoruri de proximitate:
+CHEMBL535 (Glibenclamide): Proximitate maximă (scor mic), confirmând legătura directă cu canalele de potasiu (KCNJ11)
+CHEMBL1201733 (Metformin): Scor scăzut reflectă polifarmacologia sa asupra AMPK și altor gene metabolice
+
+3.2 Drug Similarity (Exercițiul 9.1)
+Rețeaua de similaritate, construită pe baza coeficientului Jaccard, a evidențiat grupuri de medicamente (clusters) din aceeași clasă terapeutică, de exemplu:
+Statine: conectate prin țintirea HMGCR
+Acest lucru indică faptul că medicamentele cu profiluri similare de ținte pot fi explorate pentru aceleași indicații secundare.
+
+4. Candidați pentru Repurposing
+Din datele obținute, am identificat medicamente care nu sunt indicate primar pentru diabet, dar prezintă o proximitate ridicată față de genele bolii:
+Aspirina (CHEMBL25): Anti-inflamator; proximitatea față de modulele metabolice sugerează o intersecție biologică relevantă (inflamația cronică contribuie la rezistența la insulină)
+Quercetin: Nod central cu similaritate mare față de antidiabetice, sugerând un mecanism protector prin căile de semnalizare insulinică
+
+5. Perspective Critice și Limite
+Sparsity: Un număr mare de medicamente au primit scorul de penalizare 8.0, indicând incompletitudinea rețelei bipartite. Integrarea unui layer de interacțiuni Protein–Protein (PPI) ar îmbunătăți analiza.
+Direcționalitate: Modelul tratează interacțiunile ca fiind nedirecționale, dar în realitate un medicament poate fi agonist sau antagonist, influențând efectul terapeutic final.
+
+6. Concluzie
+Metoda proximității în rețele bipartite este un instrument puternic pentru filtrarea rapidă a mii de molecule.
+Datele de la Open Targets au permis construirea unei infrastructuri robuste, care a filtrat cu succes peste 7.000 de interacțiuni, identificând candidații cei mai promițători pentru validare experimentală.
